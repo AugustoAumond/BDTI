@@ -13,10 +13,10 @@ export function del (id, list){
     }
 }
 
-export function edit(list, newList){
+export function edit(newList){
     return {
         type: 'edit',
-        payload:[list, newList]
+        payload:[newList]
     }
 }
 

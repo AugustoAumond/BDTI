@@ -1,16 +1,37 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import { edit } from "../../../redux/store/lists/list.actions";
+
 
 function ActionsTasks(){
-    const [select, setSelect] = useState('full');
+    
+    const tasks = useSelector((state)=>state.list);
+
+    const dispatch = useDispatch();
+
+    const [select, setSelect] = useState(tasks.type);
+
+    function AddType(value){
+        setSelect(value);
+        
+        let newList = tasks;
+
+        newList.type = value;
+
+        dispatch(edit(newList));
+    }
 
     return(
         <DivActionsTasks>
-            <FullTasks select={select} id="fulltasks" onClick={(()=>setSelect('full'))}>TODAS TAREFAS</FullTasks>
+            <FullTasks select={select} onClick={(()=>AddType('full'))}>TODAS TAREFAS</FullTasks>
 
-            <FinishedTasks select={select} onClick={(()=>setSelect('finished'))}>TAREFAS CONCLUIDAS</FinishedTasks>
+            <FinishedTasks select={select} onClick={(()=>AddType('finished'))}>TAREFAS CONCLUIDAS</FinishedTasks>
 
-            <PendentingTasks select={select} onClick={(()=>setSelect('pendenting'))}> TARESFAS PENDENTES</PendentingTasks>
+            <PendentingTasks select={select} onClick={(()=>AddType('pendenting'))}> TARESFAS PENDENTES</PendentingTasks>
         </DivActionsTasks>
     )
 }

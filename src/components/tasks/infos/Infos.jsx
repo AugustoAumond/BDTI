@@ -3,19 +3,20 @@ import styled from "styled-components";
 import {FaList} from 'react-icons/fa'
 import {MdOutlineCheckBox, MdOutlineCheckBoxOutlineBlank} from 'react-icons/md'
 
-function Infos(){
+function Infos(props){
+
     return(
         <DivInfos>
             <div>
-               110 <FaList id="icons"/>
+               {props.tasks.tasks.length} <FaList id="icons"/>
             </div>
             
             <div>
-               40 <MdOutlineCheckBox id="icons"/>
+               {props.finished} <MdOutlineCheckBox id="icons"/>
             </div>
             
             <div>
-               70 <MdOutlineCheckBoxOutlineBlank id="icons"/>
+               {props.pendenting}<MdOutlineCheckBoxOutlineBlank id="icons"/>
             </div>
             
         </DivInfos>

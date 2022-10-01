@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import {Link} from 'react-router-dom';
+
 import { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -8,11 +10,9 @@ import {edit, del} from "../../../../redux/store/lists/list.actions";
 
 function TaskList(props){
     const item = props.item;
-
     const [open, setOpen] = useState(false);
     const [editar, setEdit] = useState(item.name);
     const [situation, setSituation] = useState(item.situation);
-    const [list, setList] = useState();
         
     const tasks = useSelector((state)=>state.list);
 
@@ -22,14 +22,17 @@ function TaskList(props){
         setSituation(value);
 
         let newList = tasks;
-        newList.map((e)=>{
+
+        newList.tasks.map((e)=>{
             if (e.id === item.id){
                 e.situation = value;
                 return newList;
             }
-            dispatch(del(newList));
-        })
+       })
+
+       dispatch(edit(newList));
     }
+    
 
     function EditList(value, item){
         setOpen(!open);
@@ -37,7 +40,7 @@ function TaskList(props){
         let newList = tasks;
         newList.map((e)=>{
             if (e.id === item.id){
-                e.situation = value;
+                e.name = value;
                 return newList;
             }
             dispatch(edit(newList));
@@ -50,7 +53,6 @@ function TaskList(props){
 
         dispatch(del(id, newList));
 
-        setList(tasks);
     }
 
     return(
@@ -58,7 +60,7 @@ function TaskList(props){
             <Li finished={situation}>
                 {open === false ? 
 
-                    <Name >
+                    <Name finished={situation}>
                         {editar}
                     </Name> : 
 
@@ -104,13 +106,16 @@ const Li = styled.li `
     justify-content: space-between;
     width: 85%;
     list-style: none;
+    transition: 2s;
 `
 
 
 const Name = styled.div`
+    background: ${props => props.finished === 'Concluida' ? '#a36d1c4d' : 'white'};
     width: 65%;
     margin-left: -28px;
     overflow: hidden;
+    transition: 2s;
 `
 
 const Situation = styled.div`
@@ -120,6 +125,7 @@ const Situation = styled.div`
     width: 30%;
     display: flex;
     justify-content: center;
+    transition: 3s;
 
     select {
         height: 25px;

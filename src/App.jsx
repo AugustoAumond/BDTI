@@ -1,5 +1,7 @@
 import styled from "styled-components"
 
+import { useSelector } from "react-redux";
+
 import Menu from "./components/menu/Menu";
 import Title from "./components/title/Title";
 import ActionsTasks from "./components/actionstasks/ActionsTasks";
@@ -15,6 +17,12 @@ function App() {
       localStorage.setItem('tasks', JSON.stringify(list))
     }
   },[])
+
+  const tasks = useSelector((state)=>state.list); 
+  
+  useEffect(()=>{
+    console.log(tasks)
+  },[tasks])
 
   return (
    <DivApp>
