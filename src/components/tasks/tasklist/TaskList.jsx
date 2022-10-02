@@ -13,10 +13,26 @@ function TaskList(props){
     const [open, setOpen] = useState(false);
     const [editar, setEdit] = useState(item.name);
     const [situation, setSituation] = useState(item.situation);
+    const [tru, setTru] = useState(false);
         
     const tasks = useSelector((state)=>state.list);
 
+    const otherList = JSON.parse(localStorage.getItem('currentList'));
+
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+
+    }, [tasks, tru]);
+
+
+    setInterval (()=>{
+
+        if (otherList?.tasks.length !== tasks?.tasks.length){
+        setTru(!tru)
+        }
+
+      },[500])
 
     function AddList(value, item){
         setSituation(value);
@@ -49,9 +65,7 @@ function TaskList(props){
 
     function Remove(id, item){
 
-        let newList = item;
-
-        dispatch(del(id, newList));
+        dispatch(del(id, tasks));
 
     }
 
@@ -61,18 +75,20 @@ function TaskList(props){
                 {open === false ? 
 
                     <Name finished={situation}>
-                        {editar}
+                        {props.item.name}
                     </Name> : 
 
                     <input maxLength={50} value={editar} onChange={((e)=>setEdit(e.currentTarget.value))}/>
                         }
 
-                <Situation finished={situation}>        
-                    <select onChange={((e)=>{AddList(e.currentTarget.value, item)})} >
-                        <option value='Pendente'> 
-                        Pendente </option>
-                        <option value='Concluida'> Concluida </option>
-                    </select>
+                <Situation finished={situation}>  
+                    <div id="divselect">      
+                        <select onChange={((e)=>{AddList(e.currentTarget.value, item)})} >
+                            <option value='Pendente'> 
+                            Pendente </option>
+                            <option value='Concluida'> Concluida </option>
+                        </select>
+                    </div>
                 </Situation>  
             </Li>
 
@@ -89,10 +105,12 @@ export default TaskList;
 const UlTaskList = styled.ul`
     display: flex;
     align-items: center;
+    justify-content: space-between;
     position: relative;
-    margin-top: 35px;
-    width: 93%;
+    margin: 10px;
+    width: 96%;
     height: 30px;
+    padding: unset;
 `
 
 const Li = styled.li `
@@ -100,11 +118,7 @@ const Li = styled.li `
     color: ${props => props.finished === 'Concluida' ? '#A36D1C' : '#01233a'};
     display: flex;
     justify-content: space-between;
-    width: 85%;
-    list-style: none;;
-    display: flex;
-    justify-content: space-between;
-    width: 85%;
+    width: 70%;
     list-style: none;
     transition: 2s;
 `
@@ -113,32 +127,42 @@ const Li = styled.li `
 const Name = styled.div`
     background: ${props => props.finished === 'Concluida' ? '#a36d1c4d' : 'white'};
     width: 65%;
-    margin-left: -28px;
     overflow: hidden;
     transition: 2s;
+
+    @media (max-width: 650px){
+        font-size: 8px;
+        width: 50%;
+    }
 `
 
 const Situation = styled.div`
     position: relative;
     color: ${props => props.finished === 'Concluida' ? '#A36D1C' : '#01233a'};
-    right: 42px;
     width: 30%;
     display: flex;
     justify-content: center;
-    transition: 3s;
+    transition: 2s;
 
     select {
+        display: flex;
+        justify-content: center;
         height: 25px;
         border-radius: 5px;
         border: solid #01233a 1px;
+    }
+
+    @media (max-width: 650px){
+        select {
+            font-size: 8px;
+        }
     }
 `
 
 const Buttons = styled.div`
     display: ${props => props.list.name === 'ADICIONE UMA TAREFA' ? 'none' : 'flex'};
     position: relative;
-    right: 10px;
-    height: 80%;
+    height: 70%;
 
     button {
         font-size: 14px;
@@ -149,5 +173,16 @@ const Buttons = styled.div`
         color: white;
         border: solid #01233a;
         cursor: pointer;
+    }
+
+    @media (max-width: 650px){
+    flex-direction: column;
+    height: 50%;
+    justify-content: center;
+
+        button {
+            font-size: 8px;
+            margin: 2px;
+        }
     }
 `

@@ -21,6 +21,7 @@ export default Menu;
 
 const DivMenu = styled.nav`
 position: fixed;
+z-index: 2;
 width: 100%;
 background: white;
 

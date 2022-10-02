@@ -1,4 +1,5 @@
-export default function listReducer (state = localStorage.getItem('tasks') || JSON.parse(localStorage.getItem('tasks')) === undefined ? JSON.parse(localStorage.getItem('tasks')) : {type: 'full', tasks: []}, action){
+export default function listReducer (state = localStorage.getItem('tasks') || JSON.parse(localStorage.getItem('tasks')) === undefined ? JSON.parse(localStorage.getItem('tasks')) : {type: 'full', 
+tasks: []}, action){
     
     switch(action.type){
         case 'add':
@@ -19,13 +20,17 @@ export default function listReducer (state = localStorage.getItem('tasks') || JS
 
                JSON.stringify(localStorage.setItem('tasks', JSON.stringify(action.payload[1]))); 
 
+               return action.payload[1]; 
+
             } else {
 
                 localStorage.removeItem('tasks'); 
 
+                return action.payload[1]; 
+
             }
 
-            return action.payload[1]; 
+            
             
         case 'edit': 
 

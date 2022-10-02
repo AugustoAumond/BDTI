@@ -20,6 +20,10 @@ margin: 10px;
 font-size: 20px;
 font-weight: 700;
 
+    @media (max-width: 650px){
+        font-size: 14px;
+    }
+
     #task {
         width: 65%;
         border-bottom: solid 1px #01233a;

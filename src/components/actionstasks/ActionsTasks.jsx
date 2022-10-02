@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -46,12 +45,21 @@ align-items: center;
 
     button {
         border-radius: 5px;
-        width: 115px;
+        max-width: 115px;
+        min-width: 90px;
+        width: 100%;
         height: 40px;
         color: white;
         cursor: pointer;
         font-size: 14px;
+        margin: 5px;
         transition: .5s;
+    }
+
+    @media (max-width: 650px){
+        button {
+            font-size: 10px;
+        }
     }
     `
 

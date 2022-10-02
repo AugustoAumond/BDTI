@@ -1,28 +1,11 @@
 import styled from "styled-components"
 
-import { useSelector } from "react-redux";
-
 import Menu from "./components/menu/Menu";
 import Title from "./components/title/Title";
 import ActionsTasks from "./components/actionstasks/ActionsTasks";
 import Tasks from "./components/tasks/Tasks";
 
-import { list } from "./App.action";
-import { useEffect } from "react";
-
 function App() {
-
-  useEffect(()=>{
-    if (!localStorage.getItem('tasks')){
-      localStorage.setItem('tasks', JSON.stringify(list))
-    }
-  },[])
-
-  const tasks = useSelector((state)=>state.list); 
-  
-  useEffect(()=>{
-    console.log(tasks)
-  },[tasks])
 
   return (
    <DivApp>
@@ -45,12 +28,20 @@ export default App;
 const DivApp = styled.div`
 max-width: 1440px;
 min-height: 100vh;
+height: 100%;
 font-family: calibri;
+
 
   #organize {
     position: relative;
     top: 100px;
     width: 80%;
     margin: 0 auto;
+  }
+
+  @media (max-width: 650px){
+    #organize {
+      width: 95%;
+    }
   }
 `

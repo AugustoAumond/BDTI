@@ -18,34 +18,24 @@ function Tasks(){
     const dispatch = useDispatch();
 
     const tasks = useSelector((state)=>state.list); 
-    
-    const filteredTasks = useMemo(() => {
-        if(tasks.type === "finished"){
-         const finishedTasks = tasks.tasks.map(task => task.situation === "Concluido");
-         return finishedTasks ;
-        }
-      
-        if(tasks.type === "pendenting"){
-          const pendentingTasks = tasks.tasks.map(task => task.situation === "Pendente");
-          return pendentingTasks;
-         }
-        return tasks.tasks
-      }, [tasks.type, tasks.tasks]);
 
-
-      setInterval (()=>{
-        if (filteredTasks !== tru){
-            setTru(filteredTasks);
-        }
-
-      },[500])
-   
+    const otherList = JSON.parse(localStorage.getItem('currentList'));
 
     useEffect(()=>{
+    
+        localStorage.setItem('currentList', JSON.stringify(tasks));
 
         ShowScreen(tasks.type, tasks.tasks)
 
-    }, [tasks, task, tru])
+    }, [tasks, task, tru]);
+
+    
+    setInterval (()=>{
+        if (otherList?.tasks.name !== tasks?.tasks.length){
+        setTru(!tru)
+        }
+
+      },[1000])
 
     
     function ShowScreen(type, list){
@@ -100,7 +90,7 @@ function Tasks(){
         if (length.length < 7){
             window.alert ('Digite uma tarefa válida')
         } else {
-            let obj = {id: tasks.tasks.length + 1, name: task, situation: 'Pendente'}; 
+            let obj = {id: tasks.tasks.length === 0 ? 0 : tasks.tasks.length, name: task, situation: 'Pendente'}; 
             dispatch(add(tasks, obj));
             setTask('');
         }     
@@ -113,7 +103,7 @@ function Tasks(){
             <TitleTasks />
 
             {ShowScreen(tasks.type, tasks.tasks).map((item, index)=>(
-                <TaskList key={item.id} item={item}/>
+                <TaskList key={item.index} item={item}/>
             ))}
 
             <div id="button">
@@ -133,14 +123,17 @@ const DivTasks = styled.div`
     height: 100%;
     min-height: 400px;
     width: 100%;
+    max-width: 720px;
     border-radius: 20px;
     border: solid 1px #01233a;
+    margin: 0 auto;
 
     #button {
         display: flex;
         justify-content: flex-end;
         align-items: center;
         width: 100%;
+        margin-left: 5px;
         margin-top: 80px;
     }
 
@@ -161,4 +154,9 @@ const Button = styled.button`
     color: white;
     border: solid #01233a;
     cursor: pointer;
+
+    @media (max-width: 650px){
+        font-size: 10px;
+        height: 30px;
+    }
 `
