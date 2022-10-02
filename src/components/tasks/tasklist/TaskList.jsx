@@ -10,6 +10,7 @@ import {edit, del} from "../../../../redux/store/lists/list.actions";
 
 function TaskList(props){
     const item = props.item;
+    
     const [open, setOpen] = useState(false);
     const [editar, setEdit] = useState(item.name);
     const [situation, setSituation] = useState(item.situation);
@@ -81,14 +82,13 @@ function TaskList(props){
                     <input maxLength={50} value={editar} onChange={((e)=>setEdit(e.currentTarget.value))}/>
                         }
 
-                <Situation finished={situation}>  
-                    <div id="divselect">      
+                <Situation finished={situation}>     
                         <select onChange={((e)=>{AddList(e.currentTarget.value, item)})} >
+                            <option value={item.situation}>{props.item.situation}</option>
                             <option value='Pendente'> 
                             Pendente </option>
                             <option value='Concluida'> Concluida </option>
                         </select>
-                    </div>
                 </Situation>  
             </Li>
 

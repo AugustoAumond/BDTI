@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState} from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -25,6 +25,7 @@ function Tasks(){
     
         localStorage.setItem('currentList', JSON.stringify(tasks));
 
+        console.log(tasks);
         ShowScreen(tasks.type, tasks.tasks)
 
     }, [tasks, task, tru]);
@@ -35,15 +36,14 @@ function Tasks(){
         setTru(!tru)
         }
 
-      },[1000])
+      },[2000])
 
     
     function ShowScreen(type, list){
         let screen = [];
 
         if (type === 'full'){
-            list;
-            return list;
+            screen = list;
         }
 
         if (type === 'finished'){
@@ -52,7 +52,6 @@ function Tasks(){
                     screen.push(e);
                 }
             })
-            return screen;
         } 
         
         if (type === 'pendenting'){
@@ -61,8 +60,8 @@ function Tasks(){
                     screen.push(e);
                 }
             })
-            return screen;
         } 
+        return screen;
     }
 
     function Finished (){
@@ -103,7 +102,7 @@ function Tasks(){
             <TitleTasks />
 
             {ShowScreen(tasks.type, tasks.tasks).map((item, index)=>(
-                <TaskList key={item.index} item={item}/>
+                <TaskList key={item.id} item={item}/>
             ))}
 
             <div id="button">
