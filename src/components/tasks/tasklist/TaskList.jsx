@@ -10,7 +10,6 @@ function TaskList(props){
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState();
     const [list, setList] = useState();
-    const [id, setId] = useState(0);
 
     useEffect(()=>{
         let newList = [];
@@ -29,7 +28,7 @@ function TaskList(props){
             setList(newList);
         });
 
-    }, [taskList, change, situation]);
+    }, [taskList, change, situation, list]);
 
     function addInput (value, id){
         if (open === false){
@@ -48,6 +47,8 @@ function TaskList(props){
         }
     }
 
+    console.log(taskList);
+
     function EditSituation(value, id){
         let newList = taskList;
         newList[id].situation = value;
@@ -60,15 +61,23 @@ function TaskList(props){
 
     function RemoveItem(id){
         let newList = [];
-        taskList.map((item, index)=>{
-            if (item.id !== id && item.id < id){
-                newList.push(item);
-            } else if (item.id !== id && item.id > id){
-                item.id = item.id -1;
-                newList.push(item);
-            }
-        })
+        if (taskList.length === 1){
+            newList = taskList;
+            newList.pop();
+        } else (
+            taskList.map((item, index)=>{
+                if (item.id !== id && item.id < id){
+                    newList.push(item);
+                } else if (item.id !== id && item.id > id){
+                    item.id = item.id -1;
+                    newList.push(item);
+                }
+            })
+        )
         setTaskList(newList);
+        setList(newList);
+        setChange(!change);
+
         localStorage.setItem('TaskList', JSON.stringify(newList));
     }
 
