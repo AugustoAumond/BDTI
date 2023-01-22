@@ -31,7 +31,7 @@ font-weight: 700;
 
     #situation {
         text-align: center;
-        width: 30%;
+        width: 24%;
         border-bottom: solid 1px #01233a;
     }
 `

@@ -8,17 +8,16 @@ function Infos(props){
     return(
         <DivInfos>
             <div>
-               {props.tasks.tasks.length} <FaList id="icons"/>
+                {props?.all} <FaList id="icons"/>
             </div>
             
             <div>
-               {props.finished} <MdOutlineCheckBox id="icons"/>
+                {props?.finished} <MdOutlineCheckBox id="icons"/>
             </div>
             
             <div>
-               {props.pendenting}<MdOutlineCheckBoxOutlineBlank id="icons"/>
-            </div>
-            
+                {props?.pendenting}<MdOutlineCheckBoxOutlineBlank id="icons"/>
+            </div>  
         </DivInfos>
     )
 }

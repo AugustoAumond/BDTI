@@ -1,36 +1,23 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 
-import { useSelector, useDispatch } from "react-redux";
-
-import { edit } from "../../../redux/store/lists/list.actions";
+import MyContext from "../../context/MyContext";
 
 
 function ActionsTasks(){
-    
-    const tasks = useSelector((state)=>state.list);
-
-    const dispatch = useDispatch();
-
-    const [select, setSelect] = useState(tasks.type);
+    const {situation, setSituation} = useContext(MyContext);
 
     function AddType(value){
-        setSelect(value);
-        
-        let newList = tasks;
-
-        newList.type = value;
-
-        dispatch(edit(newList));
+        setSituation(value);
     }
 
     return(
         <DivActionsTasks>
-            <FullTasks select={select} onClick={(()=>AddType('full'))}>TODAS TAREFAS</FullTasks>
+            <FullTasks select={situation}  onClick={(()=>AddType('All'))}>TODAS TAREFAS</FullTasks>
 
-            <FinishedTasks select={select} onClick={(()=>AddType('finished'))}>TAREFAS CONCLUIDAS</FinishedTasks>
+            <FinishedTasks select={situation}  onClick={(()=>AddType('Finished'))}>TAREFAS CONCLUIDAS</FinishedTasks>
 
-            <PendentingTasks select={select} onClick={(()=>AddType('pendenting'))}> TARESFAS PENDENTES</PendentingTasks>
+            <PendentingTasks select={situation}  onClick={(()=>AddType('Pendenting'))}> TARESFAS PENDENTES</PendentingTasks>
         </DivActionsTasks>
     )
 }
@@ -64,16 +51,16 @@ align-items: center;
     `
 
 const FullTasks = styled.button`
-    background: ${props => props.select ==='full' ? '#A36D1C' : '#004576'};
-    border: ${props => props.select ==='full' ? 'solid #A36D1C 1px' : 'solid #004576 1px'};
+    background: ${props => props.select ==='All' ? '#A36D1C' : '#004576'};
+    border: ${props => props.select ==='All' ? 'solid #A36D1C 1px' : 'solid #004576 1px'};
 `
 
 const FinishedTasks = styled.button`
-    background: ${props => props.select ==='finished' ? '#A36D1C' : '#004576'};
-    border: ${props => props.select ==='finished' ? 'solid #A36D1C 1px' : 'solid #004576 1px'};
+    background: ${props => props.select ==='Finished' ? '#A36D1C' : '#004576'};
+    border: ${props => props.select ==='Finished' ? 'solid #A36D1C 1px' : 'solid #004576 1px'};
 `
 
 const PendentingTasks = styled.button`
-    background: ${props => props.select ==='pendenting' ? '#A36D1C' : '#004576'};
-    border: ${props => props.select ==='pendenting' ? 'solid #A36D1C 1px' : 'solid #004576 1px'};
+    background: ${props => props.select ==='Pendenting' ? '#A36D1C' : '#004576'};
+    border: ${props => props.select ==='Pendenting' ? 'solid #A36D1C 1px' : 'solid #004576 1px'};
 `

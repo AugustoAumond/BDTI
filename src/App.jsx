@@ -1,25 +1,42 @@
 import styled from "styled-components"
 
+import { useEffect, useState } from "react";
+
 import Menu from "./components/menu/Menu";
 import Title from "./components/title/Title";
 import ActionsTasks from "./components/actionstasks/ActionsTasks";
 import Tasks from "./components/tasks/Tasks";
 
+import MyContext from './context/MyContext';
+
+
+
 function App() {
+  const [taskList, setTaskList] = useState([]);
+  const [situation, setSituation] = useState('All'); 
+  const [change, setChange] = useState(false);
+
+  useEffect (()=>{
+    if (localStorage.getItem('TaskList')){
+      setTaskList(JSON.parse(localStorage.getItem('TaskList')))
+    }
+  },[])
 
   return (
-   <DivApp>
-      <Menu/>
+  <MyContext.Provider value={{taskList, setTaskList, situation, setSituation, change, setChange}}>
+    <DivApp>
+        <Menu/>
 
-      <div id="organize">
-        <Title/>
+        <div id="organize">
+          <Title/>
 
-        <ActionsTasks/>
+          <ActionsTasks/>
 
-        <Tasks/>
-      </div>
-      
-   </DivApp>
+          <Tasks/>
+        </div>
+
+    </DivApp>
+  </MyContext.Provider>
   )
 }
 
@@ -30,6 +47,8 @@ max-width: 1440px;
 min-height: 100vh;
 height: 100%;
 font-family: calibri;
+margin: 0 auto;
+padding-bottom: 5%;
 
 
   #organize {

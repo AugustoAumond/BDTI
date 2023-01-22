@@ -30,6 +30,7 @@ background: white;
         justify-content: space-between;
         align-items: center;
         height: 75px;
+        max-width: 1440px;
     }
 
     #logo {

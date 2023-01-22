@@ -1,132 +1,142 @@
 import styled from "styled-components";
 
-import {Link} from 'react-router-dom';
+import { useEffect, useState, useContext } from "react";
 
-import { useEffect, useState } from "react";
-
-import { useSelector, useDispatch } from "react-redux";
-
-import {edit, del} from "../../../../redux/store/lists/list.actions";
+import MyContext from "../../../context/MyContext";
 
 function TaskList(props){
-    const item = props.item;
+    const {taskList, setTaskList, situation, change, setChange} = useContext(MyContext);
     
     const [open, setOpen] = useState(false);
-    const [editar, setEdit] = useState(item.name);
-    const [situation, setSituation] = useState(item.situation);
-    const [tru, setTru] = useState(false);
-        
-    const tasks = useSelector((state)=>state.list);
-
-    const otherList = JSON.parse(localStorage.getItem('currentList'));
-
-    const dispatch = useDispatch();
+    const [edit, setEdit] = useState();
+    const [list, setList] = useState();
+    const [id, setId] = useState(0);
 
     useEffect(()=>{
+        let newList = [];
+        taskList.forEach(item => {
+            if (situation === 'All'){
+                newList.push(item);
+            } else if (situation === 'Finished'){
+                if (item.situation === 'Concluido'){
+                    newList.push(item);
+                }
+            } else if (situation === 'Pendenting'){
+                if (item.situation === 'Pendente'){
+                    newList.push(item);
+                }
+            }
+            setList(newList);
+        });
 
-    }, [tasks, tru]);
+    }, [taskList, change, situation]);
 
-
-    setInterval (()=>{
-
-        if (otherList?.tasks.length !== tasks?.tasks.length){
-        setTru(!tru)
+    function addInput (value, id){
+        if (open === false){
+            setOpen(!open);
+            setEdit(value)
+        } else {
+            let newList = taskList;
+            newList.map((item, index)=>{
+                if (item.id === id){
+                    item.name = edit;
+                }
+            })
+            setOpen(!open);
+            setTaskList(newList);
+            localStorage.setItem('TaskList', JSON.stringify(newList));
         }
-
-      },[500])
-
-    function AddList(value, item){
-        setSituation(value);
-
-        let newList = tasks;
-
-        newList.tasks.map((e)=>{
-            if (e.id === item.id){
-                e.situation = value;
-                return newList;
-            }
-       })
-
-       dispatch(edit(newList));
     }
-    
 
-    function EditList(value, item){
-        setOpen(!open);
+    function EditSituation(value, id){
+        let newList = taskList;
+        newList[id].situation = value;
 
-        let newList = tasks;
-        newList.map((e)=>{
-            if (e.id === item.id){
-                e.name = value;
-                return newList;
+        setTaskList(newList);
+
+        setChange(!change);
+        localStorage.setItem('TaskList', JSON.stringify(newList));
+    }
+
+    function RemoveItem(id){
+        let newList = [];
+        taskList.map((item, index)=>{
+            if (item.id !== id && item.id < id){
+                newList.push(item);
+            } else if (item.id !== id && item.id > id){
+                item.id = item.id -1;
+                newList.push(item);
             }
-            dispatch(edit(newList));
         })
-    }
-
-    function Remove(id, item){
-
-        dispatch(del(id, tasks));
-
+        setTaskList(newList);
+        localStorage.setItem('TaskList', JSON.stringify(newList));
     }
 
     return(
         <UlTaskList>
-            <Li finished={situation}>
-                {open === false ? 
+            {list?.map((item, index)=>(
+            <Li key={index} finished={situation}>
+            {open === false ? 
 
-                    <Name finished={situation}>
-                        {props.item.name}
-                    </Name> : 
+                <Name finished={item.situation}>
+                    {item.name}
+                </Name> : 
 
-                    <input maxLength={50} value={editar} onChange={((e)=>setEdit(e.currentTarget.value))}/>
-                        }
+                <input maxLength={50} value={edit} onChange={((e)=>setEdit(e.currentTarget.value))}/>
+            }
 
-                <Situation finished={situation}>     
-                        <select onChange={((e)=>{AddList(e.currentTarget.value, item)})} >
-                            <option value={item.situation}>{props.item.situation}</option>
-                            <option value='Pendente'> 
-                            Pendente </option>
-                            <option value='Concluida'> Concluida </option>
-                        </select>
+                <Situation finished={item.situation}>     
+                        <Select finished={item.situation} type='reset' onChange={((e)=>EditSituation(e.currentTarget.value, item.id))}>
+                            <option selected={item.situation}>{item.situation}</option>
+
+                            <option value='Pendente'>Pendente </option>
+
+                            <option value='Concluido'> Concluida </option>
+                        </Select>
                 </Situation>  
-            </Li>
 
-            <Buttons list={props?.item}>
-                <button  onClick={(()=> EditList(editar, item))}>EDITAR</button>
-            
-                <button  onClick={(()=> Remove(item.id, tasks))}>EXCLUIR</button>
-            </Buttons>  
+                <Buttons>
+                    <button onClick={(()=>addInput(item.name,item.id, edit))}>EDITAR</button>
+                
+                    <button onClick={(()=>RemoveItem(item.id))}>EXCLUIR</button>
+                </Buttons>  
+            </Li>
+            ))}
         </UlTaskList>
     )
 }
 export default TaskList;
 
 const UlTaskList = styled.ul`
+    position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
     position: relative;
     margin: 10px;
     width: 96%;
-    height: 30px;
     padding: unset;
 `
 
 const Li = styled.li `
-    text-decoration: ${props => props.finished === 'Concluida' ? 'line-through' : 'none'};
-    color: ${props => props.finished === 'Concluida' ? '#A36D1C' : '#01233a'};
+    color: ${props => props.finished === 'Concluido' ? '#A36D1C' : '#01233a'};
     display: flex;
     justify-content: space-between;
-    width: 70%;
+    align-items: center;
+    width: 100%;
+    height: 40px;
     list-style: none;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
     transition: 2s;
 `
 
 
 const Name = styled.div`
-    background: ${props => props.finished === 'Concluida' ? '#a36d1c4d' : 'white'};
-    width: 65%;
+    text-decoration: ${props => props.finished === 'Concluido' ? 'line-through' : 'none'};
+    background: ${props => props.finished === 'Concluido' ? '#a36d1c4d' : 'white'};
+    width: 48%;
     overflow: hidden;
     transition: 2s;
 
@@ -138,18 +148,16 @@ const Name = styled.div`
 
 const Situation = styled.div`
     position: relative;
-    color: ${props => props.finished === 'Concluida' ? '#A36D1C' : '#01233a'};
-    width: 30%;
+    text-decoration: ${props => props.finished === 'Concluido' ? 'line-through' : 'none'};
+    color: ${props => props.finished === 'Concluido' ? '#A36D1C' : '#01233a'};
+    background: ${props => props.finished === 'Concluido' ? '#a36d1c4d' : 'white'};
+    width: 24%;
     display: flex;
     justify-content: center;
     transition: 2s;
 
     select {
-        display: flex;
-        justify-content: center;
-        height: 25px;
-        border-radius: 5px;
-        border: solid #01233a 1px;
+        
     }
 
     @media (max-width: 650px){
@@ -159,12 +167,27 @@ const Situation = styled.div`
     }
 `
 
+const Select = styled.select`
+    text-decoration: ${props => props.finished === 'Concluido' ? 'line-through' : 'none'};
+    color: ${props => props.finished === 'Concluido' ? '#A36D1C' : '#01233a'};  
+    background: ${props => props.finished === 'Concluido' ? '#a36d1c4d' : 'white'};
+    display: flex;
+    justify-content: center;
+    height: 25px;
+    border-radius: 5px;
+    border: solid #01233a 1px;
+`
+
 const Buttons = styled.div`
-    display: ${props => props.list.name === 'ADICIONE UMA TAREFA' ? 'none' : 'flex'};
     position: relative;
-    height: 70%;
+    display: flex;
+    height: 100%;
+    width: 21%;
+    min-width: 157px;
 
     button {
+        display: flex;
+        align-items: center;
         font-size: 14px;
         margin-left: 5px;
         height: 100%;
